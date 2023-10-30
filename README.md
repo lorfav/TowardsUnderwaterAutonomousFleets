@@ -2,6 +2,8 @@
 
 ## Description
 
+Helo!
+
 This is the repository connected to a Bachelors thesis from NTNU in 2023. It contains the code for implementation of a decentralized model predictive control architecture to be implemented in a set of [BlueROV2 Heavys](https://bluerobotics.com/store/rov/bluerov2-upgrade-kits/brov2-heavy-retrofit/).
 
 The Python toolbox [do-mpc](https://www.do-mpc.com/en/latest/) was used for the MPC controller.
