@@ -38,19 +38,19 @@ def x_directional_vector_from_quaternion(q0, e1, e2, e3):
 
 def quarternion_reference_other_ROV(x2,y2,z2,x1,y1,z1,q0,e1,e2,e3):
     """ Return """
-        vector =  [float(x2-x1), float(y2-y1), float(z2-z1)]
-        vector = vector / np.linalg.norm(vector)
-        theta = np.arccos(np.dot([1, 0, 0], vector))
-        axis = np.cross([1, 0, 0], vector)
-        if(sum(axis) != 0):
-            axis = axis / np.linalg.norm(axis)
-            q_0_setp = np.cos(theta/2)
-            e_1_setp = axis[0] * np.sin(theta/2)
-            e_2_setp = axis[1] * np.sin(theta/2)
-            e_3_setp = axis[2] * np.sin(theta/2)
-            return [q_0_setp, e_1_setp, e_2_setp, e_3_setp]
-        else:
-            return [q0, e1, e2, e3]
+    vector =  [float(x2-x1), float(y2-y1), float(z2-z1)]
+    vector = vector / np.linalg.norm(vector)
+    theta = np.arccos(np.dot([1, 0, 0], vector))
+    axis = np.cross([1, 0, 0], vector)
+    if(sum(axis) != 0):
+        axis = axis / np.linalg.norm(axis)
+        q_0_setp = np.cos(theta/2)
+        e_1_setp = axis[0] * np.sin(theta/2)
+        e_2_setp = axis[1] * np.sin(theta/2)
+        e_3_setp = axis[2] * np.sin(theta/2)
+        return [q_0_setp, e_1_setp, e_2_setp, e_3_setp]
+    else:
+        return [q0, e1, e2, e3]
 
 
 def euler_from_quaternion(w, x, y, z):
