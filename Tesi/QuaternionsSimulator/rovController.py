@@ -25,7 +25,7 @@ class MyController():
         setup_mpc = {
                 'n_horizon':20,
                 't_step':0.1,
-                'n_robust':1,
+                'n_robust':2,
                 'store_full_solution':True,
                 'nlpsol_opts': {'ipopt.max_iter': 25},
         
