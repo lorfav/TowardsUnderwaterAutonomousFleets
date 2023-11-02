@@ -77,8 +77,8 @@ def euler_from_quaternion(w, x, y, z):
 
 def tvp_fun1(t_now):
     return(tvp_template1)
-def tvp_fun2(t_now):
-    return(tvp_template2)
+##def tvp_fun2(t_now):
+    ##return(tvp_template2)
 #Creates parameters for cubic polynomial path
 def trajectory_parameter_generation(x0,dx0,x1,dx1, t0, t1):
     
@@ -121,22 +121,22 @@ def init_path():
     return x,y,z,u,v,w,t    
         
 modelRov1 = MyROVModel()
-modelRov2 = MyROVModel()
+##modelRov2 = MyROVModel()
 
 mpc1 = MyController(modelRov1,2,[1,0,0,0.5,0.5,0.5,0.5,0,0,0,0,0,0,0,0,0])
-mpc2 = MyController(modelRov2,2,[2,0,0,0.5,0.5,0.5,0.5,0,0,0,0,0,0,0,0,0])
+##mpc2 = MyController(modelRov2,2,[2,0,0,0.5,0.5,0.5,0.5,0,0,0,0,0,0,0,0,0])
 estimator1 = do_mpc.estimator.StateFeedback(modelRov1.model)
-estimator2 = do_mpc.estimator.StateFeedback(modelRov1.model)
+##estimator2 = do_mpc.estimator.StateFeedback(modelRov1.model)
 
 
 simulator1 = do_mpc.simulator.Simulator(modelRov1.model)
-simulator2 = do_mpc.simulator.Simulator(modelRov2.model)
+##simulator2 = do_mpc.simulator.Simulator(modelRov2.model)
 
 tvp_template1 = simulator1.get_tvp_template()
-tvp_template2 = simulator2.get_tvp_template()
+##tvp_template2 = simulator2.get_tvp_template()
 
 simulator1.set_tvp_fun(tvp_fun1)
-simulator2.set_tvp_fun(tvp_fun2)
+##simulator2.set_tvp_fun(tvp_fun2)
 
 params_simulator = {
     # Note: cvode doesn't support DAE systems.
@@ -148,27 +148,27 @@ params_simulator = {
 }
 
 simulator1.set_param(**params_simulator)
-simulator2.set_param(**params_simulator)
+##simulator2.set_param(**params_simulator)
 
 simulator1.setup()
-simulator2.setup()
+##simulator2.setup()
 
 #x0 = np.array([20, -11.4, -1.5, 10, 20, 20, -10, 1,1,2,3,4]).reshape(-1,1)
 #               x,y,z,q_0,e_1,e_2,e_3,u,v,w,p,q,r
 x0_1 = np.array([4, 2, 0, 1,0,0,0, 0,0,0,0,0,0]).reshape(-1,1)
-x0_2 = np.array([1, 0, 0, 1,0,0,0, 0,0,0,0,0,0]).reshape(-1,1)
+##x0_2 = np.array([1, 0, 0, 1,0,0,0, 0,0,0,0,0,0]).reshape(-1,1)
 
 mpc1.x0 = x0_1
-mpc2.x0 = x0_2
+##mpc2.x0 = x0_2
 
 estimator1.x0 = x0_1
 simulator1.x0 = x0_1
 
-estimator2.x0 = x0_2
-simulator2.x0 = x0_2
+##estimator2.x0 = x0_2
+##simulator2.x0 = x0_2
 
 mpc1.mpc.set_initial_guess()
-mpc2.mpc.set_initial_guess()
+##mpc2.mpc.set_initial_guess()
 
 mpc_graphics = do_mpc.graphics.Graphics(mpc1.mpc.data)
 sim_graphics = do_mpc.graphics.Graphics(simulator1.data)
@@ -214,13 +214,13 @@ ax[2].set_ylabel('Angle [rad]')
 #y_next = simulator.make_step(u0)
 
 plot1 = []
-plot2 = []
+##plot2 = []
 
 quart1 = []
-quart2 = []
+##quart2 = []
 
 quart_sp1 = []
-quart_sp2 = []
+##quart_sp2 = []
 
 u0_1 = np.zeros((8,1))
 u0_2 = np.zeros((8,1))
@@ -231,29 +231,29 @@ for i in range(max_itr):
     mpc1.v_c = 0
     mpc1.w_c = 0
     print(x0_1)
-    print(x0_2)
+    ##print(x0_2)
     u0_1 = mpc1.mpc.make_step(x0_1)
-    u0_2 = mpc2.mpc.make_step(x0_2)
+    ##u0_2 = mpc2.mpc.make_step(x0_2)
 
     y_next_1 = simulator1.make_step(u0_1)
-    y_next_2 = simulator2.make_step(u0_2)
+    ##y_next_2 = simulator2.make_step(u0_2)
     
     x0_1 = estimator1.make_step(y_next_1)
-    x0_2 = estimator2.make_step(y_next_2)
+    ##x0_2 = estimator2.make_step(y_next_2)
 
     quart1.append(x0_1[3:7])
-    quart2.append(x0_2[3:7])
+    ##quart2.append(x0_2[3:7])
 
-    mpc1.x_2 = x0_2[0]
-    mpc1.y_2 = x0_2[1]
-    mpc1.z_2 = x0_2[2]
+    ##mpc1.y_2 = x0_2[1]
+    ##mpc1.z_2 = x0_2[2]
 
-    mpc2.x_2 = x0_1[0]
-    mpc2.y_2 = x0_1[1]
-    mpc2.z_2 = x0_1[2]
+    ##mpc2.x_2 = x0_1[0]
+    ##mpc2.y_2 = x0_1[1]
+    ##mpc2.z_2 = x0_1[2]
 
-    quart_ref_1 = quarternion_reference_other_ROV(x0_2[0],x0_2[1],x0_2[2], x0_1[0], x0_1[1], x0_1[2], x0_1[3], x0_1[4], x0_1[5], x0_1[6])
-    quart_ref_2 = quarternion_reference_other_ROV(x0_1[0],x0_1[1],x0_1[2], x0_2[0], x0_2[1], x0_2[2], x0_2[3], x0_2[4], x0_2[5], x0_2[6])
+    ##quart_ref_1 = quarternion_reference_other_ROV(x0_2[0],x0_2[1],x0_2[2], x0_1[0], x0_1[1], x0_1[2], x0_1[3], x0_1[4], x0_1[5], x0_1[6])
+    ##quart_ref_2 = quarternion_reference_other_ROV(x0_1[0],x0_1[1],x0_1[2], x0_2[0], x0_2[1], x0_2[2], x0_2[3], x0_2[4], x0_2[5], x0_2[6])
+    
     #mpc2.q_0_setp = quart_ref_2[0]
     #mpc2.e_1_setp = quart_ref_2[1]
     #mpc2.e_2_setp = quart_ref_2[2]
@@ -271,13 +271,13 @@ for i in range(max_itr):
         mpc1.e_1_setp = 1
         mpc1.e_2_setp = 0
         mpc1.e_3_setp = 0
-        mpc2.q_0_setp = 0
-        mpc2.e_1_setp = 0
-        mpc2.e_2_setp = 1
-        mpc2.e_3_setp = 0
-    if i == 200:
-        mpc2.x_setp -= 7
-        mpc2.y_setp += 7
+    ##    mpc2.q_0_setp = 0
+    ##    mpc2.e_1_setp = 0
+    ##    mpc2.e_2_setp = 1
+    ##    mpc2.e_3_setp = 0
+    ##if i == 200:
+    ##    mpc2.x_setp -= 7
+    ##    mpc2.y_setp += 7
 
     for k in range(35):
         print("\t\t\t\t\t\t\t\t\t\t\t\tIteration {}/{}:\t".format(i,max_itr))
@@ -290,15 +290,15 @@ for i in range(max_itr):
 
 
 
-    x0_2_euler = np.copy(x0_2)
-    x0_2_euler[3] = euler_from_quaternion(x0_2[3], x0_2[4], x0_2[5], x0_2[6])[0]
-    x0_2_euler[4] = euler_from_quaternion(x0_2[3], x0_2[4], x0_2[5], x0_2[6])[1]
-    x0_2_euler[5] = euler_from_quaternion(x0_2[3], x0_2[4], x0_2[5], x0_2[6])[2]
-    x0_2_euler = np.delete(x0_2_euler, 6)
+    ##x0_2_euler = np.copy(x0_2)
+    ##x0_2_euler[3] = euler_from_quaternion(x0_2[3], x0_2[4], x0_2[5], x0_2[6])[0]
+    ##x0_2_euler[4] = euler_from_quaternion(x0_2[3], x0_2[4], x0_2[5], x0_2[6])[1]
+    ##x0_2_euler[5] = euler_from_quaternion(x0_2[3], x0_2[4], x0_2[5], x0_2[6])[2]
+    ##x0_2_euler = np.delete(x0_2_euler, 6)
 
     
     plot1.append(x0_1_euler)
-    plot2.append(x0_2_euler)
+    ##plot2.append(x0_2_euler)
 
 
 ######################### DETTE ER FOR PLOT ########################################
@@ -309,19 +309,19 @@ df = pd.DataFrame(data, columns=['x','y','z','phi','theta','psi','u','v','w','p'
 df.to_csv('data1.csv', index=False)
 print(df)
 #####################################################################################
-for i in range(len(plot2)):
-    plot2[i] = [float(plot2[i][j]) for j in range(len(plot2[i]))]
-data = [list(plot2[i]) for i in range(len(plot2))]
-df = pd.DataFrame(data, columns=['x','y','z','phi','theta','psi','u','v','w','p','q','r'])
-df.to_csv('data2.csv', index=False)
-print(df)
+##for i in range(len(plot2)):
+##    plot2[i] = [float(plot2[i][j]) for j in range(len(plot2[i]))]
+##data = [list(plot2[i]) for i in range(len(plot2))]
+##df = pd.DataFrame(data, columns=['x','y','z','phi','theta','psi','u','v','w','p','q','r'])
+##df.to_csv('data2.csv', index=False)
+##print(df)
 ###################################################################################
-for i in range(len(plot2)):
-    plot2[i] = [float(plot2[i][j]) for j in range(len(plot2[i]))]
-data = [list(plot2[i]) for i in range(len(plot2))]
-df = pd.DataFrame(data, columns=['x','y','z','phi','theta','psi','u','v','w','p','q','r'])
-df.to_csv('data2.csv', index=False)
-print(df)
+##for i in range(len(plot2)):
+    ##plot2[i] = [float(plot2[i][j]) for j in range(len(plot2[i]))]
+##data = [list(plot2[i]) for i in range(len(plot2))]
+##df = pd.DataFrame(data, columns=['x','y','z','phi','theta','psi','u','v','w','p','q','r'])
+##df.to_csv('data2.csv', index=False)
+##print(df)
 ###################################################################################
 for i in range(len(quart1)):
     quart1[i] = [float(quart1[i][j]) for j in range(len(quart1[i]))]
@@ -329,11 +329,11 @@ data = [list(quart1[i]) for i in range(len(quart1))]
 df = pd.DataFrame(data, columns=['q0','q1','q2','q3'])
 df.to_csv('quart1.csv', index=False)
 ###################################################################################
-for i in range(len(quart2)):
-    quart2[i] = [float(quart2[i][j]) for j in range(len(quart2[i]))]
-data = [list(quart2[i]) for i in range(len(quart2))]
-df = pd.DataFrame(data, columns=['q0','q1','q2','q3'])
-df.to_csv('quart2.csv', index=False)
+##for i in range(len(quart2)):
+    ##quart2[i] = [float(quart2[i][j]) for j in range(len(quart2[i]))]
+##data = [list(quart2[i]) for i in range(len(quart2))]
+##df = pd.DataFrame(data, columns=['q0','q1','q2','q3'])
+##df.to_csv('quart2.csv', index=False)
 ###################################################################################
 for i in range(len(quart_sp1)):
     quart_sp1[i] = [float(quart_sp1[i][j]) for j in range(len(quart_sp1[i]))]
@@ -341,11 +341,11 @@ data = [list(quart_sp1[i]) for i in range(len(quart_sp1))]
 df = pd.DataFrame(data, columns=['q0','q1','q2','q3'])
 df.to_csv('quart_sp1.csv', index=False)
 ###################################################################################
-for i in range(len(quart_sp2)):
-    quart_sp2[i] = [float(quart_sp2[i][j]) for j in range(len(quart_sp2[i]))]
-data = [list(quart_sp2[i]) for i in range(len(quart_sp2))]
-df = pd.DataFrame(data, columns=['q0','q1','q2','q3'])
-df.to_csv('quart_sp2.csv', index=False)
+##for i in range(len(quart_sp2)):
+    ##quart_sp2[i] = [float(quart_sp2[i][j]) for j in range(len(quart_sp2[i]))]
+##data = [list(quart_sp2[i]) for i in range(len(quart_sp2))]
+##df = pd.DataFrame(data, columns=['q0','q1','q2','q3'])
+##df.to_csv('quart_sp2.csv', index=False)
 
 
 
