@@ -38,9 +38,9 @@ t_1 = list(range(len(x_1)))
 t_1 = [float(i) for i in t_1]
 phi_1 = list(df_1[df_1.columns[5]]) #Yaw
 theta_1 = list(df_1[df_1.columns[4]]) #Pitch
-x_sp_1 = list(df_1[df_1.columns[15]])
-y_sp_1 = list(df_1[df_1.columns[16]])
-z_sp_1 = list(df_1[df_1.columns[17]])
+x_sp_1 = list(df_1[df_1.columns[9]])
+y_sp_1 = list(df_1[df_1.columns[10]])
+z_sp_1 = list(df_1[df_1.columns[11]])
 df_1 = pd.DataFrame({"time": t_1 ,"x" : x_1, "y" : y_1, "z" : z_1, "phi" : phi_1, "theta" : theta_1, "x_sp" : x_sp_1, "y_sp" : y_sp_1, "z_sp" : z_sp_1})
 
 #Second ROV
@@ -52,9 +52,9 @@ t_2 = list(range(len(x_2)))
 t_2 = [float(i) for i in t_2]
 phi_2 = list(df_2[df_2.columns[5]]) #Yaw
 theta_2 = list(df_2[df_2.columns[4]]) #Pitch
-x_sp_2 = list(df_2[df_2.columns[15]])
-y_sp_2 = list(df_2[df_2.columns[16]])
-z_sp_2 = list(df_2[df_2.columns[17]])
+x_sp_2 = list(df_2[df_2.columns[9]])
+y_sp_2 = list(df_2[df_2.columns[10]])
+z_sp_2 = list(df_2[df_2.columns[11]])
 df_2 = pd.DataFrame({"time": t_2 ,"x" : x_2, "y" : y_2, "z" : z_2, "phi" : phi_2, "theta" : theta_2, "x_sp" : x_sp_2, "y_sp" : y_sp_2, "z_sp" : z_sp_2})
 
 ############# Functions ###########################################
