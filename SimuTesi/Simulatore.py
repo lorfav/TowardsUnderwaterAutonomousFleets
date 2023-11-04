@@ -92,6 +92,7 @@ function_line = True
 firt_itr = True
 
 rot_count = 0
+data = []
 
 for i in range(n_sim):
 
@@ -105,4 +106,42 @@ for i in range(n_sim):
     y_next = simulator.make_step(u0)
 
     x0 = estimator.make_step(y_next)
+
+    data.append(x0)
+
+
+    lines = (sim_graphics.result_lines['_x', 'x']+
+        sim_graphics.result_lines['_x', 'y']+
+        sim_graphics.result_lines['_x', 'z']+
+        sim_graphics.result_lines['_x', 'u']+
+        sim_graphics.result_lines['_x', 'v']+
+        sim_graphics.result_lines['_x', 'w']
+        )
+ax[0].legend(lines,'xyzuvw',title='position')
+
+lines = (sim_graphics.result_lines['_u', 'u_1']+
+        sim_graphics.result_lines['_u', 'u_2']+
+        sim_graphics.result_lines['_u', 'u_3']+
+        sim_graphics.result_lines['_u', 'u_4']+
+        sim_graphics.result_lines['_u', 'u_5']+
+        sim_graphics.result_lines['_u', 'u_6']+
+        sim_graphics.result_lines['_u', 'u_7']+
+        sim_graphics.result_lines['_u', 'u_8']
+        )
+
+ax[1].legend(lines,'12345678',title='input')
+
+lines = (sim_graphics.result_lines['_x', 'phi']+
+        sim_graphics.result_lines['_x', 'theta']+
+        sim_graphics.result_lines['_x', 'psi']+
+        sim_graphics.result_lines['_x', 'p']+
+        sim_graphics.result_lines['_x', 'q']+
+        sim_graphics.result_lines['_x', 'r'])
+ax[2].legend(lines,'φθψpqr',title='euler angles')
+sim_graphics.plot_results()
+
+sim_graphics.reset_axes()
+
+plt.show()
+
 
