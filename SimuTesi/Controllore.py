@@ -3,15 +3,15 @@ from casadi import *
 
 class MyController():
 
-    def __init__(rovModel, setPoints = [0,0,0,0,0,0,0,0,0,0,0,0]):
-        x_setp = setPoints[0]
-        y_setp = setPoints[1]
-        z_setp = setPoints[2]
-        phi_setp = setPoints[3]
-        theta_setp = setPoints[4]
-        psi_setp = setPoints[5]
+    def __init__(self, rovModel, setPoints = [0,0,0,0,0,0,0,0,0,0,0,0]):
+        self.x_setp = setPoints[0]
+        self.y_setp = setPoints[1]
+        self.z_setp = setPoints[2]
+        self.phi_setp = setPoints[3]
+        self.theta_setp = setPoints[4]
+        self.psi_setp = setPoints[5]
 
-        mpc = do_mpc.controller.MPC(rovModel.model)
+        self.mpc = do_mpc.controller.MPC(rovModel.model)
 
         setup_mpc = {
             'n_horizon':20,
@@ -20,7 +20,7 @@ class MyController():
             'store_full_solution':True
         }
 
-        mpc.set_param(**setup_mpc)
+        self.mpc.set_param(**setup_mpc)
 
         
         _x_rov = rovModel.model.x
@@ -35,20 +35,12 @@ class MyController():
                 (_tvp_rov['theta_sp'] - _x_rov['theta'])**2 + (_tvp_rov['psi_sp'] - _x_rov['psi'])**2
         )
 
-        tvp_template = mpc.get_tvp_template()
-
-        def tvp_fun(t_now):
-            tvp_template['x_sp'] =  x_setp
-            tvp_template['y_sp'] =  y_setp
-            tvp_template['z_sp'] =  z_setp
-            tvp_template['phi_sp'] = phi_setp
-            tvp_template['theta_sp'] = theta_setp
-            tvp_template['psi_sp'] = psi_setp
-            return tvp_template
+    
         
-        mpc.set_tvp_fun(tvp_fun)
+        
+        self.mpc.set_tvp_fun(self.tvp_fun)
 
-        mpc.set_rterm(
+        self.mpc.set_rterm(
             u_1 = 0.1,
             u_2 = 0.1,
             u_3 = 0.1,
@@ -59,31 +51,43 @@ class MyController():
             u_8 = 0.1,
         )
     
-        mpc.set_objective(mterm = mterm, lterm = lterm)
+        self.mpc.set_objective(mterm = mterm, lterm = lterm)
 
 
 
-        mpc.bounds['lower', '_u', 'u_1'] = -6.2
-        mpc.bounds['lower', '_u', 'u_2'] = -6.2
-        mpc.bounds['lower', '_u', 'u_3'] = -6.2
-        mpc.bounds['lower', '_u', 'u_4'] = -6.2
-        mpc.bounds['lower', '_u', 'u_5'] = -6.2
-        mpc.bounds['lower', '_u', 'u_6'] = -6.2
-        mpc.bounds['lower', '_u', 'u_7'] = -6.2
-        mpc.bounds['lower', '_u', 'u_8'] = -6.2
+        self.mpc.bounds['lower', '_u', 'u_1'] = -6.2
+        self.mpc.bounds['lower', '_u', 'u_2'] = -6.2
+        self.mpc.bounds['lower', '_u', 'u_3'] = -6.2
+        self.mpc.bounds['lower', '_u', 'u_4'] = -6.2
+        self.mpc.bounds['lower', '_u', 'u_5'] = -6.2
+        self.mpc.bounds['lower', '_u', 'u_6'] = -6.2
+        self.mpc.bounds['lower', '_u', 'u_7'] = -6.2
+        self.mpc.bounds['lower', '_u', 'u_8'] = -6.2
         
         
-        mpc.bounds['upper', '_u', 'u_1'] =  6.2
-        mpc.bounds['upper', '_u', 'u_2'] =  6.2
-        mpc.bounds['upper', '_u', 'u_3'] =  6.2
-        mpc.bounds['upper', '_u', 'u_4'] =  6.2
-        mpc.bounds['upper', '_u', 'u_5'] =  6.2
-        mpc.bounds['upper', '_u', 'u_6'] =  6.2
-        mpc.bounds['upper', '_u', 'u_7'] =  6.2
-        mpc.bounds['upper', '_u', 'u_8'] =  6.2
+        self.mpc.bounds['upper', '_u', 'u_1'] =  6.2
+        self.mpc.bounds['upper', '_u', 'u_2'] =  6.2
+        self.mpc.bounds['upper', '_u', 'u_3'] =  6.2
+        self.mpc.bounds['upper', '_u', 'u_4'] =  6.2
+        self.mpc.bounds['upper', '_u', 'u_5'] =  6.2
+        self.mpc.bounds['upper', '_u', 'u_6'] =  6.2
+        self.mpc.bounds['upper', '_u', 'u_7'] =  6.2
+        self.mpc.bounds['upper', '_u', 'u_8'] =  6.2
 
 
-        mpc.setup()
+        self.mpc.setup()
+
+    def tvp_fun(self, t_now):
+        tvp_template = self.mpc.get_tvp_template()
+        for k in range(21):
+            tvp_template['_tvp', k, 'x_sp'] =  self.x_setp
+            tvp_template['_tvp', k, 'y_sp'] =  self.y_setp
+            tvp_template['_tvp', k, 'z_sp'] =  self.z_setp
+            tvp_template['_tvp', k, 'phi_sp'] = self.phi_setp
+            tvp_template['_tvp', k, 'theta_sp'] = self.theta_setp
+            tvp_template['_tvp', k, 'psi_sp'] = self.psi_setp
+
+        return tvp_template
 
 
 
