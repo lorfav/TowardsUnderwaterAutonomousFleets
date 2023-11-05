@@ -52,7 +52,7 @@ class MyROVModel():
         N_rdot = -0.12              # Kg m**2/rad
         
         
-        
+        d = [4,0,0]
         #states
         #pos
         x = self.model.set_variable('_x', 'x')
@@ -87,7 +87,6 @@ class MyROVModel():
         u_6 = self.model.set_variable('_u', 'u_6')
         u_7 = self.model.set_variable('_u', 'u_7')
         u_8 = self.model.set_variable('_u', 'u_8')
-        
         
         x_sp = self.model.set_variable('_tvp', 'x_sp')
         y_sp = self.model.set_variable('_tvp', 'y_sp')
@@ -124,8 +123,8 @@ class MyROVModel():
         g_6 = 0
         
         #tau forces
-        tau_1 = (0.707*u_1 + 0.707*u_2-0.707*u_3-0.707*u_4)
-        tau_2 =(-0.707*u_1 + 0.707*u_2-0.707*u_3 + 0.707*u_4)
+        tau_1 = (0.707*u_1 + 0.707*u_2-0.707*u_3-0.707*u_4) 
+        tau_2 =(-0.707*u_1 + 0.707*u_2-0.707*u_3 + 0.707*u_4) 
         tau_3 =( -u_5 + u_6 + u_7 - u_8)
         tau_4 =(0.06*u_1 - 0.06*u_2 + 0.06*u_3 - 0.06*u_4 -0.218*u_5 - 0.218*u_6 + 0.218*u_7 + 0.218*u_8)
         tau_5 =(0.06*u_1 + 0.06*u_2 - 0.06*u_3 - 0.06*u_4 + 0.120*u_5 - 0.120*u_6 + 0.120*u_7 - 0.120*u_8)
@@ -179,10 +178,10 @@ class MyROVModel():
         D_nl_4 = -(K_p_abs*fabs(p))*p
         D_nl_5 = -(M_q_abs*fabs(q))*q
         D_nl_6 = -(N_r_abs*fabs(r))*r
-        
+
         
 
-        f_1 = M_rb_1 + M_a_1 + C_rb_1 + C_a_1 + D_l_1 + D_nl_1 + g_1 - tau_1
+        f_1 = M_rb_1 + M_a_1 + C_rb_1 + C_a_1 + D_l_1 + D_nl_1 + g_1 - tau_1 
         f_2 = M_rb_2 + M_a_2 + C_rb_2 + C_a_2 + D_l_2 + D_nl_2 + g_2 - tau_2
         f_3 = M_rb_3 + M_a_3 + C_rb_3 + C_a_3 + D_l_3 + D_nl_3 + g_3 - tau_3
         f_4 = M_rb_4 + M_a_4 + C_rb_4 + C_a_4 + D_l_4 + D_nl_4 + g_4 - tau_4
@@ -192,6 +191,8 @@ class MyROVModel():
         
         
         dynamics = vertcat(f_1,f_2,f_3,f_4,f_5,f_6)
+        for i in range(3):
+            dynamics[i] -= d[i]
         
         self.model.set_alg('dynamics',dynamics)
         
